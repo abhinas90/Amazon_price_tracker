@@ -2,8 +2,17 @@ from selenium import webdriver
 import re
 import time
 import warnings
+import os
 from selenium.common.exceptions import NoSuchElementException
 warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+# op=webdriver.ChromeOptions()
+# op.binary_location=os.environ.get("GOOGLE_CHROME_BIN")
+# op.add_argument("--headless")
+# op.add_argument("--no-sandbox")
+# op.add_argument("--disavle-dev-sh-usage")
+#
+# driver=webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH "),chrome_options=op)
 
 
 class Bot(object):
@@ -12,10 +21,15 @@ class Bot(object):
     def __init__(self, asin):
         self.amazon_url = "https://www.amazon.com/dp/"
         self.asin = asin
-        # self.options = webdriver.ChromeOptions()
-        # self.options.headless = True
-        self.driver = webdriver.Chrome(
-            executable_path='C:\\Users\\abhin\\Desktop\\python\\chromedriver.exe')
+
+        op = webdriver.ChromeOptions()
+        op.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        op.add_argument("--headless")
+        op.add_argument("--no-sandbox")
+        op.add_argument("--disavle-dev-sh-usage")
+        self.driver = webdriver.Chrome(executable_path=os.environ.get(
+            "CHROMEDRIVER_PATH "), chrome_options=op)
+
         try:
             self.driver.get(self.amazon_url + self.asin)
             self.driver.find_element_by_xpath("//h1[@id='title']").text
