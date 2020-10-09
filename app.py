@@ -1,18 +1,12 @@
-from selenium import webdriver
 import re
 import time
 import warnings
 import os
+import requests
+import re
+from lxml import html
 from selenium.common.exceptions import NoSuchElementException
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-
-# op=webdriver.ChromeOptions()
-# op.binary_location=os.environ.get("GOOGLE_CHROME_BIN")
-# op.add_argument("--headless")
-# op.add_argument("--no-sandbox")
-# op.add_argument("--disavle-dev-sh-usage")
-#
-# driver=webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH "),chrome_options=op)
 
 
 class Bot(object):
@@ -21,18 +15,14 @@ class Bot(object):
     def __init__(self, asin):
         self.amazon_url = "https://www.amazon.com/dp/"
         self.asin = asin
-
-        op = webdriver.ChromeOptions()
-        op.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        op.add_argument("--headless")
-        op.add_argument("--no-sandbox")
-        op.add_argument("--disavle-dev-sh-usage")
-        self.driver = webdriver.Chrome(executable_path=os.environ.get(
-            "CHROMEDRIVER_PATH "), chrome_options=op)
+        headers = {"authority": "www.amazon.com",
+                   "method": "GET",
+                   "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"}
 
         try:
-            self.driver.get(self.amazon_url + self.asin)
-            self.driver.find_element_by_xpath("//h1[@id='title']").text
+            self.r = requests.get(self.amazon_url + self.asin, headers=headers)
+            self.trees = html.fromstring(self.r.content)
+            self.trees.xpath("//h1[@id='title'] / text()")
 
         except NoSuchElementException:
             Bot.asin_check = False
@@ -45,22 +35,22 @@ class Bot(object):
         price = "0.0000"
 
         try:
-            price = self.driver.find_element_by_id("priceblock_ourprice").text
+            price = self.trees.get_element_by_id("priceblock_ourprice").text
         except:
             try:
-                price = self.driver.find_element_by_id(
+                price = self.trees.get_element_by_id(
                     "price_inside_buybox").text
             except:
                 try:
-                    price = self.driver.find_element_by_id(
+                    price = self.trees.get_element_by_id(
                         "priceblock_dealprice").text
                 except:
                     try:
-                        price = self.driver.find_element_by_xpath(
+                        price = self.trees.find_element_by_xpath(
                             "//span[@class='a-color-price']").text
                     except:
                         try:
-                            price = self.driver.find_element_by_xpath(
+                            price = self.trees.find_element_by_xpath(
                                 "//span[@class='a-size-base a-color-price']").text
                         except:
                             pass
@@ -74,25 +64,23 @@ class Bot(object):
         """Returns the product name of the Amazon URL."""
 
         try:
-            product_name = self.driver.find_element_by_id("productTitle").text
+            product_name = self.trees.get_element_by_id("productTitle").text
         except:
             pass
         if product_name is None:
             product_name = "Not available"
+        product_name = product_name.replace("\n", "")
         return product_name
 
     def get_number_of_sellers(self):
         no_of_sellers = 1
         """Gets Number of seller , if not found returns 1"""
         try:
-            xpath = "//span[contains(text(),'New & Used')]"
-            span = self.driver.find_element_by_xpath(xpath).text
-        except NoSuchElementException:
-            try:
-                xpath = "//span[contains(text(),'New')]"
-                span = self.driver.find_element_by_xpath(xpath).text
-            except:
-                span = "1"
+            span = self.trees.xpath(
+                "//span[contains(text(),'New')]/text()")[0]
+
+        except:
+            span = "1"
         extract_num = re.compile(r'[^\d.]+')
         no_of_sellers = extract_num.sub('', span)
         return int(no_of_sellers)
@@ -104,11 +92,10 @@ class Bot(object):
             name = self.get_product_name()
             url = self.amazon_url + self.asin
             num_of_sellers = self.get_number_of_sellers()
-            self.driver.quit()
             return price, url, name, num_of_sellers
         else:
             return ("Incorrect_ASIN", "Incorrect_ASIN", "Incorrect_ASIN")
 
 
-asin = Bot('B0881WJFKM')
+asin = Bot("B01HDYFCJO")
 print(asin.search_items())
