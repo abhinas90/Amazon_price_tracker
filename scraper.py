@@ -55,5 +55,5 @@ df_new = df_new[col]
 df_new.to_csv("output.csv", index=False)  # Saving the file to "output.csv"
 print("File is Ready to View ")
 
-send_email.sendmail("aidatafreak@gmail.com", "Kathmandu1$",
+send_email.sendmail("hellodataworld09@gmail.com", "Goodmorning1*",
                     "abhinas_plp@yahoo.com", "Hello_df")
