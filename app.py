@@ -42,12 +42,12 @@ class Bot(object):
                         "priceblock_dealprice").text
                 except:
                     try:
-                        price = self.trees.get_element_by_xpath(
-                            "//span[@class='a-color-price']").text
+                        price = self.trees.xpath(
+                            "//span[@class='a-color-price']/text()")[0]
                     except:
                         try:
-                            price = self.trees.get_element_by_xpath(
-                                "//span[@class='a-size-base a-color-price']").text
+                            price = self.trees.xpath(
+                                "//span[@class='a-size-base a-color-price']/text()")[0]
                         except:
                             pass
 
@@ -103,5 +103,5 @@ class Bot(object):
 
 
 if __name__ == "__main__":
-    asin = Bot('B0881WJFKM')
+    asin = Bot('B00B9X04F8')
     print(asin.search_items())
