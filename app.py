@@ -1,11 +1,9 @@
 import re
 import time
-import warnings
-import os
 import requests
 import re
 from lxml import html
-from selenium.common.exceptions import NoSuchElementException
+import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
@@ -19,12 +17,10 @@ class Bot(object):
                    "method": "GET",
                    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"}
 
-        try:
-            self.r = requests.get(self.amazon_url + self.asin, headers=headers)
-            self.trees = html.fromstring(self.r.content)
-            self.trees.xpath("//h1[@id='title'] / text()")
-
-        except NoSuchElementException:
+        r = requests.get(self.amazon_url + self.asin, headers=headers)
+        if r.status_code == 200:
+            self.trees = html.fromstring(r.content)
+        else:
             Bot.asin_check = False
 
     def get_product_price(self):
@@ -46,11 +42,11 @@ class Bot(object):
                         "priceblock_dealprice").text
                 except:
                     try:
-                        price = self.trees.find_element_by_xpath(
+                        price = self.trees.get_element_by_xpath(
                             "//span[@class='a-color-price']").text
                     except:
                         try:
-                            price = self.trees.find_element_by_xpath(
+                            price = self.trees.get_element_by_xpath(
                                 "//span[@class='a-size-base a-color-price']").text
                         except:
                             pass
@@ -77,13 +73,21 @@ class Bot(object):
         """Gets Number of seller , if not found returns 1"""
         try:
             span = self.trees.xpath(
-                "//span[contains(text(),'New')]/text()")[0]
+                "//span[contains(text(),'New & Used')]/text()")
+            if span:
+                extract_num = re.compile(r'[^\d.]+')
+                no_of_sellers = extract_num.sub('', span[0])
+                return int(no_of_sellers)
 
         except:
-            span = "1"
-        extract_num = re.compile(r'[^\d.]+')
-        no_of_sellers = extract_num.sub('', span)
-        return int(no_of_sellers)
+            span = trees.xpath("//span[contains(text(),'New')]/text()")
+            if span:
+                extract_num = re.compile(r'[^\d.]+')
+                no_of_sellers = extract_num.sub('', span[0])
+                return int(no_of_sellers)
+            else:
+                span = "1"
+                return(span)
 
     def search_items(self):
         if Bot.asin_check:
@@ -92,10 +96,12 @@ class Bot(object):
             name = self.get_product_name()
             url = self.amazon_url + self.asin
             num_of_sellers = self.get_number_of_sellers()
-            return price, url, name, num_of_sellers
+
+            return price, url, name,   num_of_sellers
         else:
             return ("Incorrect_ASIN", "Incorrect_ASIN", "Incorrect_ASIN")
 
 
-asin = Bot("B01HDYFCJO")
-print(asin.search_items())
+if __name__ == "__main__":
+    asin = Bot('B0881WJFKM')
+    print(asin.search_items())
