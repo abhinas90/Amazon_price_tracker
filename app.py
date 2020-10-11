@@ -72,15 +72,15 @@ class Bot(object):
         no_of_sellers = 1
         """Gets Number of seller , if not found returns 1"""
         try:
-            span = self.trees.xpath(
-                "//span[contains(text(),'New & Used')]/text()")
+            span = self.trees.xpath("//span[contains(text(),'New')]/text()")
             if span:
                 extract_num = re.compile(r'[^\d.]+')
                 no_of_sellers = extract_num.sub('', span[0])
                 return int(no_of_sellers)
 
         except:
-            span = trees.xpath("//span[contains(text(),'New')]/text()")
+            span = self.trees.xpath(
+                "//span[contains(text(),'New & Used')]/text()")
             if span:
                 extract_num = re.compile(r'[^\d.]+')
                 no_of_sellers = extract_num.sub('', span[0])
@@ -97,11 +97,11 @@ class Bot(object):
             url = self.amazon_url + self.asin
             num_of_sellers = self.get_number_of_sellers()
 
-            return price, url, name,   num_of_sellers
+            return price, url, name, num_of_sellers
         else:
             return ("Incorrect_ASIN", "Incorrect_ASIN", "Incorrect_ASIN")
 
 
 if __name__ == "__main__":
-    asin = Bot('B00B9X04F8')
+    asin = Bot('B07JXP6RW5')
     print(asin.search_items())
