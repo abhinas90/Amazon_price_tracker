@@ -6,9 +6,9 @@ from email import encoders
 import pandas as pd
 
 
-def sendmail(user, pwd, recipients, subject):
+def sendmail(user, pwd, recipients, subject, df):
     try:
-        df = pd.read_csv("output.csv")
+        df = df
         df_html = df.to_html()
         dfPart = MIMEText(df_html, "html")
 
@@ -18,7 +18,7 @@ def sendmail(user, pwd, recipients, subject):
         msg["To"] = recipients
         msg.attach(dfPart)
 
-        filename = 'output1.csv'
+        filename = 'output.csv'
         attachment = open(filename, 'rb')
         part = MIMEBase('application', 'octet-stream')
         part.set_payload((attachment).read())

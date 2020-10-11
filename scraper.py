@@ -52,8 +52,8 @@ df_new["old_seller"] = old_df["num_of_seller"]
 col = ['asin', 'old_price', 'price', 'change',
        "old_seller", "num_of_seller", 'url', 'name']
 df_new = df_new[col]
-df_new.to_csv("output1.csv", index=False)  # Saving the file to "output.csv"
+df_new.to_csv("output.csv", index=False)  # Saving the file to "output.csv"
 print("File is Ready to View ")
 
 send_email.sendmail("hellodataworld09@gmail.com", "Goodmorning1*",
-                    "abhinas_plp@yahoo.com", "Hello_df")
+                    "abhinas_plp@yahoo.com", "Hello_df", df=df_new)
