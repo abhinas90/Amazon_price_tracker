@@ -18,7 +18,7 @@ def sendmail(user, pwd, recipients, subject):
         msg["To"] = recipients
         msg.attach(dfPart)
 
-        filename = 'output.csv'
+        filename = 'output1.csv'
         attachment = open(filename, 'rb')
         part = MIMEBase('application', 'octet-stream')
         part.set_payload((attachment).read())
