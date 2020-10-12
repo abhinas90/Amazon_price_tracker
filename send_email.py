@@ -13,7 +13,7 @@ def sendmail(user, pwd, recipients, subject, df):
         dfPart = MIMEText(df_html, "html")
 
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = subject
+        msg["Subject"] = "hello from heroku"
         msg["From"] = user
         msg["To"] = recipients
         msg.attach(dfPart)
