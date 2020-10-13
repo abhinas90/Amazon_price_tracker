@@ -3,3 +3,4 @@ requests==2.22.0
 lxml==4.5.0
 secure-smtplib==0.1.1
 mime==0.1.0
+psycopg2-binary==2.8.6

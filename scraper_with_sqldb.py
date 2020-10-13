@@ -1,9 +1,14 @@
+import database
+import sqlite3
 from app import Bot
 import send_email
 import pandas as pd
 import numpy as n
 import time
-old_df = pd.read_csv("output.csv")
+from sqlalchemy import create_engine
+
+cnx = sqlite3.connect('database.db')
+old_df = pd.read_sql_query("SELECT * FROM asins_table", cnx)
 old_df.fillna(0)
 items = old_df["asin"].to_list()
 
@@ -52,9 +57,24 @@ df_new["old_seller"] = old_df["num_of_seller"]
 col = ['asin', 'old_price', 'price', 'change',
        "old_seller", "num_of_seller", 'url', 'name']
 df_new = df_new[col]
-df_new.to_csv("output.csv", index=False)  # Saving the file to "output.csv"
+database.deleting_table('asins_table')
+print("old table dropped successfully")
 
-print("File is Ready to View ")
+
+# Writing New Df to Database:
+
+engine = create_engine('sqlite:///database.db', echo=True)
+sqlite_connection = engine.connect()
+df_new.to_sql('asins_table', con=sqlite_connection,
+              if_exists='replace', index=False,)
+
+# print(engine.execute("SELECT * FROM asins_table").fetchall())
+# cnx.close()
+
+
+df = pd.read_sql_query("SELECT * FROM asins_table", cnx)
+print(df)
+cnx.close()
 
 send_email.sendmail("hellodataworld09@gmail.com", "Goodmorning1*",
                     "abhinas_plp@yahoo.com", "Hello_df", df=df_new)
