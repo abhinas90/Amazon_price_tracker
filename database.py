@@ -68,9 +68,11 @@ def deleting_table(table_name):
 # deleting_table('asins_table')
 # create_table()
 # insert_entry()
-# #add_asin(['B07GH953JN', 'B07JXP6RW5'])
+# #add_asin()
 # remove_asin(['B07GH953JN', 'B01EIKRP0K', 'B079T64NS7', 'B00B9X04F8',
 #             'B0827HSQQJ', 'B07Q2N1SJV', 'B07JXP6RW5', 'B07PZF5F5P'])
+# add_asin(['B07GH953JN', 'B01EIKRP0K', 'B079T64NS7', 'B00B9X04F8',
+#          'B0827HSQQJ', 'B07Q2N1SJV', 'B07JXP6RW5', 'B07PZF5F5P'])
 # deleting_table('asins_table')
 #
 #

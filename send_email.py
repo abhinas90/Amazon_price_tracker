@@ -4,6 +4,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import pandas as pd
+import os
 
 
 def sendmail(user, pwd, recipients, subject, df, outputfile):
@@ -43,5 +44,5 @@ def sendmail(user, pwd, recipients, subject, df, outputfile):
 
 
 def delete_outputfile(outputfile):
-    os.remove(fn=outputfile) if os.path.exists(
-        fn=outputfile) else print(f'File not found{outputfile}')
+    os.remove(outputfile) if os.path.exists(
+        outputfile) else print(f'File not found{outputfile}')
