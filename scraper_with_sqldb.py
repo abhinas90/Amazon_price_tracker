@@ -5,11 +5,14 @@ import send_email
 import pandas as pd
 import numpy as n
 import time
+from datetime import datetime
+from pytz import timezone
+import pytz
 from sqlalchemy import create_engine
 
 
 def get_pst_time():
-    date_format = '%m-%d-%Y %H:%M:%S'
+    date_format = '%m-%d-%Y-%H-%M'
     utc_dt = pytz.utc.localize(datetime.utcnow())
     pst_tz = timezone('US/Pacific')
     pst_dt = pst_tz.normalize(utc_dt.astimezone(pst_tz))
@@ -35,6 +38,8 @@ for item in items:
         print('Incorrect Asin,or product not found')
         prices.append(n.nan)
         urls.append(n.nan)
+        names.append(n.nan)
+        num_of_sellers.append(n.nan)
         names.append("Incorrect Asin,or product not found")
 
 

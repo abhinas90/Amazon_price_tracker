@@ -13,19 +13,8 @@ def sendmail(user, pwd, recipients, subject, df, outputfile):
         dfPart = MIMEText(df_html, "html")
 
         msg = MIMEMultipart("alternative")
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        msg["Subject"] = f"Scraped at {outputfile.replace(".csv","")} from db"
-=======
         msg["Subject"] = "hello from heroku"
->>>>>>> parent of a9ca23a... changed subject line on email
-=======
-        msg["Subject"] = "hello from herokugit st"
->>>>>>> parent of a1f79b2... get price if price is not in first base page
-=======
-        msg["Subject"] = "hello from herokugit st"
->>>>>>> parent of a1f79b2... get price if price is not in first base page
+
         msg["From"] = user
         msg["To"] = recipients
         msg.attach(dfPart)
