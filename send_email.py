@@ -4,22 +4,25 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import pandas as pd
-import time
 
 
-def sendmail(user, pwd, recipients, subject, df):
+def sendmail(user, pwd, recipients, subject, df, outputfile):
     try:
         df = df
         df_html = df.to_html()
         dfPart = MIMEText(df_html, "html")
 
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = f"Scraped at {time.ctime()}"
+<<<<<<< HEAD
+        msg["Subject"] = f"Scraped at {outputfile.replace(".csv","")} from db"
+=======
+        msg["Subject"] = "hello from heroku"
+>>>>>>> parent of a9ca23a... changed subject line on email
         msg["From"] = user
         msg["To"] = recipients
         msg.attach(dfPart)
 
-        filename = 'output.csv'
+        filename = outputfile
         attachment = open(filename, 'rb')
         part = MIMEBase('application', 'octet-stream')
         part.set_payload((attachment).read())

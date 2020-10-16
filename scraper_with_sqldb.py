@@ -7,6 +7,15 @@ import numpy as n
 import time
 from sqlalchemy import create_engine
 
+
+def get_pst_time():
+    date_format = '%m-%d-%Y %H:%M:%S'
+    utc_dt = pytz.utc.localize(datetime.utcnow())
+    pst_tz = timezone('US/Pacific')
+    pst_dt = pst_tz.normalize(utc_dt.astimezone(pst_tz))
+    return(pst_dt.strftime(date_format))
+
+
 cnx = sqlite3.connect('database.db')
 old_df = pd.read_sql_query("SELECT * FROM asins_table", cnx)
 old_df.fillna(0)
@@ -57,13 +66,18 @@ df_new["old_seller"] = old_df["num_of_seller"]
 col = ['asin', 'old_price', 'price', 'change',
        "old_seller", "num_of_seller", 'url', 'name']
 df_new = df_new[col]
+
+outputfile_name = get_pst_time() + ".csv"
+df_new.to_csv(outputfile_name, index=False)
+
+
 database.deleting_table('asins_table')
 print("old table dropped successfully")
 
 
 # Writing New Df to Database:
 
-engine = create_engine('sqlite:///database.db', echo=False)
+engine = create_engine('sqlite:///database.db', echo=True)
 sqlite_connection = engine.connect()
 df_new.to_sql('asins_table', con=sqlite_connection,
               if_exists='replace', index=False,)
@@ -77,4 +91,4 @@ print(df)
 cnx.close()
 
 send_email.sendmail("hellodataworld09@gmail.com", "Goodmorning1*",
-                    "abhinas_plp@yahoo.com", "Hello_df", df=df_new)
+                    "abhinas_plp@yahoo.com", "Hello_df", df=df_new, outputfile=outputfile_name)
