@@ -97,3 +97,5 @@ cnx.close()
 
 send_email.sendmail("hellodataworld09@gmail.com", "Goodmorning1*",
                     "abhinas_plp@yahoo.com", "Hello_df", df=df_new, outputfile=outputfile_name)
+
+send_email.delete_outputfile(outputfile_name)

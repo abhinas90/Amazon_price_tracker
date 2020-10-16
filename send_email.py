@@ -40,3 +40,8 @@ def sendmail(user, pwd, recipients, subject, df, outputfile):
     except Exception as e:
         print(str(e))
         print("Failed to send email;")
+
+
+def delete_outputfile(outputfile):
+    os.remove(fn=outputfile) if os.path.exists(
+        fn=outputfile) else print(f'File not found{outputfile}')
