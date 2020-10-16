@@ -63,7 +63,7 @@ print("old table dropped successfully")
 
 # Writing New Df to Database:
 
-engine = create_engine('sqlite:///database.db', echo=True)
+engine = create_engine('sqlite:///database.db', echo=False)
 sqlite_connection = engine.connect()
 df_new.to_sql('asins_table', con=sqlite_connection,
               if_exists='replace', index=False,)

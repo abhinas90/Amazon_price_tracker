@@ -4,6 +4,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import pandas as pd
+import time
 
 
 def sendmail(user, pwd, recipients, subject, df):
@@ -13,7 +14,7 @@ def sendmail(user, pwd, recipients, subject, df):
         dfPart = MIMEText(df_html, "html")
 
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = "hello from heroku"
+        msg["Subject"] = f"Scraped at {time.ctime()}"
         msg["From"] = user
         msg["To"] = recipients
         msg.attach(dfPart)
