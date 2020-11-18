@@ -72,7 +72,8 @@ class Bot(object):
         no_of_sellers = 1
         """Gets Number of seller , if not found returns 1"""
         try:
-            span = self.trees.xpath("//span[contains(text(),'New')]/text()")
+            span = self.trees.xpath(
+                "//span[contains(text(),'New') and contains(text(),'from')]/text()")
             if span:
                 extract_num = re.compile(r'[^\d.]+')
                 no_of_sellers = extract_num.sub('', span[0])
