@@ -3,6 +3,19 @@ import send_email
 import pandas as pd
 import numpy as n
 import time
+from datetime import datetime
+from pytz import timezone
+import pytz
+
+
+def get_pst_time():
+    date_format = '%m-%d-%Y-%H-%M'
+    utc_dt = pytz.utc.localize(datetime.utcnow())
+    pst_tz = timezone('US/Pacific')
+    pst_dt = pst_tz.normalize(utc_dt.astimezone(pst_tz))
+    return(pst_dt.strftime(date_format))
+
+
 old_df = pd.read_csv("output.csv")
 old_df.fillna(0)
 items = old_df["asin"].to_list()
@@ -53,8 +66,10 @@ col = ['asin', 'old_price', 'price', 'change',
        "old_seller", "num_of_seller", 'url', 'name']
 df_new = df_new[col]
 df_new.to_csv("output.csv", index=False)  # Saving the file to "output.csv"
+outputfile_name = get_pst_time() + ".csv"
+df_new.to_csv(outputfile_name, index=False)
 
 print("File is Ready to View ")
 
 send_email.sendmail("hellodataworld09@gmail.com", "Goodmorning1*",
-                    "abhinas_plp@yahoo.com", "Hello_df", df=df_new ,outputfile=None)
+                    "abhinas_plp@yahoo.com", "Hello_df", df=df_new, outputfile=outputfile_name)
